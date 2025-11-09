@@ -25,9 +25,9 @@ Los scripts disponibles son:
 Abrir una terminal en la carpeta del proyecto.
 
 # Ejecutar el menú principal con:
-
+  ```bash
 ./menu.sh
-
+  ```
 
 Elegir una de las opciones que aparecen:
 
@@ -48,12 +48,12 @@ Si querés colaborar o mejorarlo:
 Hacé un fork del repositorio.
 
 Creá una nueva rama para tus cambios:
-
+  ```bash
 git checkout -b mi-mejora
-
+  ```
 
 Subí tus cambios y hacé un pull request para revisión.
 
-📜 Licencia
+# 📜 Licencia
 
 Este proyecto se distribuye bajo la licencia MIT, lo que significa que podés usarlo, modificarlo y compartirlo libremente, siempre que se incluya el aviso de copyright original.
