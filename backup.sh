@@ -11,17 +11,26 @@ clear
 echo -e "${azul}🌀 Iniciando proceso de respaldo...${reset}"
 sleep 1
 
-# === 📁 Carpetas de origen y destino ===
-origen="$HOME/Documentos/pruebas_backup"
-destino="$HOME/backups"
+# === 📁 Carpeta de destino fija ===
+destino="/c/backups"
 mkdir -p "$destino"
+
+# === 📂 Pedir al usuario la carpeta de origen ===
+echo -e "${amarillo}📂 Ingresá la ruta de la carpeta que querés respaldar:${reset}"
+read -e origen
+
+# Verificar que la carpeta exista
+if [ ! -d "$origen" ]; then
+    echo -e "\n${rojo}❌ La carpeta ingresada no existe.${reset}"
+    exit 1
+fi
 
 # === 🕒 Crear nombre con fecha ===
 fecha=$(date +%Y-%m-%d_%H-%M)
 archivo="$destino/respaldo_$fecha.tar.gz"
 
 # === 📦 Crear el backup ===
-echo -e "${amarillo}📦 Creando backup...${reset}"
+echo -e "\n${amarillo}📦 Creando backup...${reset}"
 sleep 1
 tar -czf "$archivo" "$origen" &> /dev/null
 
