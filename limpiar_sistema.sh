@@ -7,48 +7,55 @@ azul="\e[34m"
 amarillo="\e[33m"
 reset="\e[0m"
 
-# === 🧹 Limpieza de sistema ===
 clear
-echo -e "${azul}🧼 Iniciando limpieza del sistema...${reset}"
+echo -e "${azul}🧼 LIMPIEZA DE SISTEMA PERSONALIZADA${reset}"
 sleep 1
 
-# Carpetas simuladas o reales
-temp="$HOME/descargas_temp"
-cache="$HOME/cache_sistema"
+# === 📁 Pedir carpeta al usuario ===
+echo -e "${amarillo}📂 Ingresá la ruta de la carpeta donde querés buscar archivos temporales o caché:${reset}"
+read -p "👉 Carpeta: " carpeta
+echo ""
 
-# Crear las carpetas si no existen
-mkdir -p "$temp" "$cache"
+# Verificar que exista
+if [ ! -d "$carpeta" ]; then
+    echo -e "${rojo}❌ Error: la carpeta no existe.${reset}"
+    read -p "Presioná ENTER para salir..." _
+    exit 1
+fi
 
-# Mostrar mensaje previo
-echo -e "${amarillo}🌀 Buscando archivos temporales y caché...${reset}"
+# === 🔍 Buscar archivos temporales y de caché ===
+echo -e "${azul}🔎 Buscando archivos en ${carpeta}...${reset}"
 sleep 1
 
-# Listar archivos a eliminar
-archivos_temp=$(find "$temp" -type f)
-archivos_cache=$(find "$cache" -type f)
+archivos=$(find "$carpeta" -type f \( -name "*.tmp" -o -name "*.log" -o -name "*.cache" -o -name "*.dat" -o -name "*.txt" \))
 
-# Eliminar archivos y mostrar resultados
-if [ -n "$archivos_temp" ] || [ -n "$archivos_cache" ]; then
+if [ -z "$archivos" ]; then
+    echo -e "${verde}✨ No se encontraron archivos temporales, de caché ni .txt.${reset}"
+    read -p "🔙 Presioná ENTER para volver al menú..." _
+    exit 0
+fi
+
+# === 📋 Mostrar archivos encontrados ===
+echo ""
+echo -e "${amarillo}📋 Archivos encontrados:${reset}"
+echo "$archivos"
+echo ""
+read -p "⚠️ ¿Querés eliminar estos archivos? (s/n): " confirmar
+
+# === 🧹 Borrar si confirma ===
+if [[ "$confirmar" == "s" || "$confirmar" == "S" ]]; then
+    cantidad=$(echo "$archivos" | wc -l)
     echo ""
-    echo -e "${azul}📂 Archivos eliminados:${reset}"
-    echo -e "${amarillo}$archivos_temp${reset}"
-    echo -e "${amarillo}$archivos_cache${reset}"
-    find "$temp" -type f -delete
-    find "$cache" -type f -delete
+    echo -e "${azul}🗑️ Eliminando $cantidad archivos...${reset}"
+    find "$carpeta" -type f \( -name "*.tmp" -o -name "*.log" -o -name "*.cache" -o -name "*.dat" -o -name "*.txt" \) -delete
     echo ""
-    echo -e "${verde}✅ Limpieza completada exitosamente.${reset}"
+    echo -e "${verde}✅ Limpieza completada. Se eliminaron $cantidad archivos.${reset}"
 else
     echo ""
-    echo -e "${rojo}❌ No se encontraron archivos para eliminar.${reset}"
+    echo -e "${rojo}❌ Limpieza cancelada por el usuario.${reset}"
 fi
 
 echo ""
-echo -e "${azul}🧹 Directorios limpiados:${reset}"
-echo -e "   - ${amarillo}$temp${reset}"
-echo -e "   - ${amarillo}$cache${reset}"
-echo ""
-echo -e "${verde}✨ El sistema quedó limpio y ordenado.${reset}"
-
-# Esperar antes de volver al menú
+echo -e "${azul}📦 Proceso finalizado en la carpeta:${reset} $carpeta"
 echo ""
 read -p "🔙 Presioná ENTER para volver al menú..." _
